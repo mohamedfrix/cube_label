@@ -1,0 +1,196 @@
+@import "tailwindcss";
+
+/* ============================================================
+ * DESIGN TOKENS — extracted from Figma file "OCR ui"
+ * Source: figma.com/design/ni61De9QL5F8eNqh75EJ3G
+ * 
+ * These CSS variables are the single source of truth for
+ * every color, font-size, spacing value, and radius used
+ * in the application. Tailwind picks them up via @theme.
+ * ============================================================ */
+
+:root {
+  /* ── Base ─────────────────────────────────────────────── */
+  --background: #ffffff;
+  --foreground: #09090B;
+
+  /* ── Brand / Primary ─────────────────────────────────── */
+  --color-brand-primary: #275DD9;
+  /* Brand Primary color */
+  --color-primary-blue: #527DE1;
+  /* Primary Blue — used on links, active tabs, highlights */
+
+  /* ── Accent / Grey Scale ─────────────────────────────── */
+  --color-accent-grey-1: #DEE2E6;
+  /* Accent/Grey 1 — lightest border/divider */
+  --color-accent-grey-2: #CED4DA;
+  /* Accent/Grey 2 — heavier borders */
+  --color-accent-grey-3: #6C757D;
+  /* Accent/Grey 3 — muted text, placeholders */
+
+  /* ── Semantic / Interaction ──────────────────────────── */
+  --color-selected-item: rgba(82, 125, 225, 0.1);
+  /* Selected-item — row/card highlight */
+
+  /* ── Neutrals (from fills) ───────────────────────────── */
+  --color-black: #09090B;
+  /* Primary text */
+  --color-dark: #18181B;
+  /* Sidebar background, headings */
+  --color-text-secondary: #71717A;
+  /* Secondary/muted body text */
+  --color-text-tertiary: #52525B;
+  /* Tertiary text */
+  --color-grey-light: #F4F4F5;
+  /* Subtle card/section backgrounds */
+  --color-grey-lightest: #FAFAFA;
+  /* Page canvas tint */
+  --color-grey-border: #E4E4E7;
+  /* Most common border colour */
+  --color-grey-divider: #E2E2E2;
+  /* Dividers */
+  --color-surface: #F8F8F8;
+  /* Panel surfaces */
+  --color-surface-alt: #F4F4F4;
+  /* Alternate surface */
+  --color-input-bg: #F1F1F1;
+  /* Input backgrounds */
+
+  /* ── Status / Feedback ───────────────────────────────── */
+  --color-error: #DC2626;
+  /* Error / destructive red */
+  --color-success: #5CC66E;
+  /* Success green */
+  --color-success-light: #77DB89;
+  /* Lighter success shade */
+  --color-success-bg: #F2FFF4;
+  /* Success background tint */
+  --color-warning: #F68D2B;
+  /* Warning orange */
+  --color-info: #344BFD;
+  /* Info / accent blue */
+  --color-highlight-blue: #1671EB;
+  /* Bright interactive blue */
+  --color-highlight-bg: #EEF2FC;
+  /* Blue-tinted card background */
+
+  /* ── Typography Scale ────────────────────────────────── */
+  --font-size-xs: 0.75rem;
+  /* 12px */
+  --font-size-sm: 0.875rem;
+  /* 14px */
+  --font-size-base: 1rem;
+  /* 16px */
+  --font-size-lg: 1.25rem;
+  /* 20px */
+  --font-size-xl: 1.375rem;
+  /* 22px — section titles */
+  --font-size-2xl: 1.5rem;
+  /* 24px — page headings */
+  --font-size-3xl: 2rem;
+  /* 32px — hero/dashboard */
+
+  /* ── Spacing Scale ───────────────────────────────────── */
+  --spacing-xs: 0.25rem;
+  /* 4px */
+  --spacing-sm: 0.5rem;
+  /* 8px */
+  --spacing-md: 1rem;
+  /* 16px */
+  --spacing-lg: 1.5rem;
+  /* 24px */
+  --spacing-xl: 2rem;
+  /* 32px */
+
+  /* ── Border Radii ────────────────────────────────────── */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+}
+
+/* ============================================================
+ * TAILWIND v4 THEME BINDING
+ * Variables prefixed with --color-* auto-generate
+ * bg-*, text-*, border-* utilities.
+ * ============================================================ */
+@theme inline {
+  /* Base */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* Brand */
+  --color-brand: var(--color-brand-primary);
+  --color-primary: var(--color-primary-blue);
+
+  /* Grey scale */
+  --color-grey-1: var(--color-accent-grey-1);
+  --color-grey-2: var(--color-accent-grey-2);
+  --color-grey-3: var(--color-accent-grey-3);
+
+  /* Semantic */
+  --color-selected: var(--color-selected-item);
+
+  /* Neutrals */
+  --color-black: var(--color-black);
+  --color-dark: var(--color-dark);
+  --color-muted: var(--color-text-secondary);
+  --color-subtle: var(--color-text-tertiary);
+  --color-surface: var(--color-surface);
+  --color-surface-alt: var(--color-surface-alt);
+  --color-input: var(--color-input-bg);
+  --color-border: var(--color-grey-border);
+  --color-divider: var(--color-grey-divider);
+  --color-canvas: var(--color-grey-lightest);
+  --color-card: var(--color-grey-light);
+
+  /* Status */
+  --color-error: var(--color-error);
+  --color-success: var(--color-success);
+  --color-success-light: var(--color-success-light);
+  --color-success-bg: var(--color-success-bg);
+  --color-warning: var(--color-warning);
+  --color-info: var(--color-info);
+  --color-highlight: var(--color-highlight-blue);
+  --color-highlight-bg: var(--color-highlight-bg);
+
+  /* Fonts */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-inter: var(--font-inter);
+
+  /* Font sizes */
+  --text-xs: var(--font-size-xs);
+  --text-sm: var(--font-size-sm);
+  --text-base: var(--font-size-base);
+  --text-lg: var(--font-size-lg);
+  --text-xl: var(--font-size-xl);
+  --text-2xl: var(--font-size-2xl);
+  --text-3xl: var(--font-size-3xl);
+
+  /* Spacing */
+  --spacing-xs: var(--spacing-xs);
+  --spacing-sm: var(--spacing-sm);
+  --spacing-md: var(--spacing-md);
+  --spacing-lg: var(--spacing-lg);
+  --spacing-xl: var(--spacing-xl);
+
+  /* Radii */
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+}
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+} */
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
