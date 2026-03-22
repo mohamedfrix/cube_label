@@ -5,6 +5,9 @@ import StatCard from './components/StatCard';
 import Calendar from './components/Calendar';
 import HistoryTimeline, { TimelineEvent } from './components/HistoryTimeline';
 import Image from 'next/image';
+import { Document } from './components/columns';
+import { DataTable } from './components/data-table';
+import { columns } from './components/columns';
 
 const EVENTS_DB: Record<string, TimelineEvent[]> = {
     "2026-03-24": [
@@ -52,6 +55,99 @@ const EVENTS_DB: Record<string, TimelineEvent[]> = {
     ]
 };
 
+const DOCUMENTS_DB: Document[] = [
+    {
+        id: 1,
+        familyName: "OUAZZI",
+        firstName: "Mounir",
+        phone: "+212 6 12 34 56 78",
+        date: "2026-03-24",
+        tags: ["Urgent", "Review"],
+        doc: "Constat amiable d’accient"
+    },
+    {
+        id: 2,
+        familyName: "OUAZZI",
+        firstName: "Mounir",
+        phone: "+212 6 12 34 56 78",
+        date: "2026-03-24",
+        tags: ["Urgent", "Review"],
+        doc: "Constat amiable d’accient"
+    },
+    {
+        id: 3,
+        familyName: "OUAZZI",
+        firstName: "Mounir",
+        phone: "+212 6 12 34 56 78",
+        date: "2026-03-24",
+        tags: ["Urgent", "Review"],
+        doc: "Constat amiable d’accient"
+    },
+    {
+        id: 4,
+        familyName: "OUAZZI",
+        firstName: "Mounir",
+        phone: "+212 6 12 34 56 78",
+        date: "2026-03-24",
+        tags: ["Urgent", "Review"],
+        doc: "Constat amiable d’accient"
+    },
+    {
+        id: 5,
+        familyName: "OUAZZI",
+        firstName: "Mounir",
+        phone: "+212 6 12 34 56 78",
+        date: "2026-03-24",
+        tags: ["Urgent", "Review"],
+        doc: "Constat amiable d’accient"
+    },
+    {
+        id: 6,  
+        familyName: "OUAZZI",
+        firstName: "Mounir",
+        phone: "+212 6 12 34 56 78",
+        date: "2026-03-24",
+        tags: ["Urgent", "Review"],
+        doc: "Constat amiable d’accient"
+    },
+    {
+        id: 7,
+        familyName: "OUAZZI",
+        firstName: "Mounir",
+        phone: "+212 6 12 34 56 78",
+        date: "2026-03-24",
+        tags: ["Urgent", "Review"],
+        doc: "Constat amiable d’accient"
+    },
+    {
+        id: 8,
+        familyName: "OUAZZI",
+        firstName: "Mounir",
+        phone: "+212 6 12 34 56 78",
+        date: "2026-03-24",
+        tags: ["Urgent", "Review"],
+        doc: "Constat amiable d’accient"
+    },
+    {
+        id: 9,
+        familyName: "OUAZZI",
+        firstName: "Mounir",
+        phone: "+212 6 12 34 56 78",
+        date: "2026-03-24",
+        tags: ["Urgent", "Review"],
+        doc: "Constat amiable d’accient"
+    },
+    {
+        id: 10,
+        familyName: "OUAZZI",
+        firstName: "Mounir",
+        phone: "+212 6 12 34 56 78",
+        date: "2026-03-24",
+        tags: ["Urgent", "Review"],
+        doc: "Constat amiable d’accient"
+    },
+]
+
 const formatDateKey = (date: Date) => {
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 };
@@ -65,11 +161,17 @@ export default function DocumentsPage() {
     return (
         <div className="flex flex-col md:flex-row md:justify-between gap-6 p-8 w-full h-full">
             {/* Left Column: Stat Cards */}
-            <div className="flex-1 flex gap-5 md:flex-row flex-col max-w-[800px]">
-                <StatCard title="Documents left" value="835" />
-                <StatCard title="In process" value="194" />
-                <StatCard title="Finalized documents" value="1190079" />
+            <div className="w-full">
+                <div className="flex-1 flex gap-5 md:flex-row flex-col">
+                    <StatCard title="Documents left" value="835" />
+                    <StatCard title="In process" value="194" />
+                    <StatCard title="Finalized documents" value="1190079" />
+                </div>
+                <div className="w-full mt-12 font-inter font-medium">
+                    <DataTable columns={columns} data={DOCUMENTS_DB} />
+                </div>
             </div>
+            
 
             {/* Right Column: Calendar & Timeline */}
             <div className="w-full md:w-[360px] flex flex-col gap-6 shrink-0">

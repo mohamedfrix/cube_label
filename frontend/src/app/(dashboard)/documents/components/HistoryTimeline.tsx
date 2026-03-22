@@ -51,7 +51,7 @@ export default function HistoryTimeline({ events }: HistoryTimelineProps) {
                                     <div className="flex items-center gap-2.5 mt-1">
                                         <div className="w-[26px] h-[26px] rounded-full overflow-hidden relative shrink-0">
                                             <Image
-                                                src="/hero2.jpg"
+                                                src="/images/profile_picture_2.png"
                                                 alt={slot.event.user}
                                                 width={26}
                                                 height={26}
