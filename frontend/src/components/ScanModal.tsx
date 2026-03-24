@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { X, Upload, CheckCircle2, Loader2, FileText, Check, AlertCircle } from 'lucide-react';
+import { Loader2, Check, AlertCircle } from 'lucide-react';
 
 export type ModalState = 'IDLE' | 'UPLOADING' | 'READY' | 'PROCESSING' | 'COMPLETE';
 
@@ -10,9 +10,28 @@ interface ScanModalProps {
     isOpen: boolean;
     onClose: () => void;
     initialState?: ModalState; // For temp-modals page
+    requireTemplateSelection?: boolean;
+    templates?: Array<{
+        id: number;
+        name: string;
+        description: string;
+        fieldCount: number;
+    }>;
+    selectedTemplateId?: number | null;
+    onSelectTemplate?: (templateId: number) => void;
+    onScanComplete?: (payload: { fileName: string; templateId: number | null }) => void;
 }
 
-export default function ScanModal({ isOpen, onClose, initialState }: ScanModalProps) {
+export default function ScanModal({
+    isOpen,
+    onClose,
+    initialState,
+    requireTemplateSelection = false,
+    templates = [],
+    selectedTemplateId = null,
+    onSelectTemplate,
+    onScanComplete,
+}: ScanModalProps) {
     const router = useRouter();
     const [state, setState] = useState<ModalState>(initialState || 'IDLE');
     const [progress, setProgress] = useState(0);
@@ -27,14 +46,19 @@ export default function ScanModal({ isOpen, onClose, initialState }: ScanModalPr
         "Detecting tables",
         "Structuring layout"
     ];
+    const acceptedMimeTypes = ["application/pdf", "image/jpeg", "image/png"];
 
     // Reset state when modal opens
     useEffect(() => {
         if (isOpen && !initialState) {
-            setState('IDLE');
-            setFileName('');
-            setProgress(0);
-            setError(null);
+            const resetTimer = window.setTimeout(() => {
+                setState('IDLE');
+                setFileName('');
+                setProgress(0);
+                setError(null);
+            }, 0);
+
+            return () => window.clearTimeout(resetTimer);
         }
     }, [isOpen, initialState]);
 
@@ -42,8 +66,13 @@ export default function ScanModal({ isOpen, onClose, initialState }: ScanModalPr
         const file = e.target.files?.[0];
         if (!file) return;
 
-        if (file.type !== 'application/pdf') {
-            setError('Only PDF files are allowed.');
+        if (requireTemplateSelection && !selectedTemplateId) {
+            setError('Please select an extraction template first.');
+            return;
+        }
+
+        if (!acceptedMimeTypes.includes(file.type)) {
+            setError('Only PDF, JPG, JPEG, and PNG files are allowed.');
             return;
         }
 
@@ -118,7 +147,7 @@ export default function ScanModal({ isOpen, onClose, initialState }: ScanModalPr
                     type="file" 
                     ref={fileInputRef}
                     onChange={handleFileChange}
-                    accept=".pdf"
+                    accept=".pdf,.jpg,.jpeg,.png"
                     className="hidden"
                 />
 
@@ -142,23 +171,70 @@ export default function ScanModal({ isOpen, onClose, initialState }: ScanModalPr
 
                             {/* Content based on state */}
                             {state === 'IDLE' && (
-                                <div className="flex flex-col items-center px-10 text-center w-full">
-                                    <div className="w-12 h-16 bg-[#5CC66E] rounded-lg relative overflow-hidden mb-5 shadow-sm">
-                                        <div className="absolute top-0 right-0 w-4 h-4 bg-white/30 rounded-bl-lg" />
+                                <div className="w-full max-w-[400px] flex flex-col gap-4 px-2 py-8">
+                                    {requireTemplateSelection && (
+                                        <div className="rounded-xl border border-[#D4D4D8] bg-white p-3 text-left shadow-sm">
+                                            <p className="text-[11px] font-bold uppercase tracking-wider text-[#71717A] mb-2 px-1">
+                                                Extraction template
+                                            </p>
+                                            <div className="grid gap-2 max-h-36 overflow-auto pr-1">
+                                                {templates.length === 0 ? (
+                                                    <div className="text-xs text-[#71717A] bg-[#FAFAFA] rounded-lg p-3 border border-[#E4E4E7]">
+                                                        No templates available. Add one from the Fields Extraction page.
+                                                    </div>
+                                                ) : (
+                                                    templates.map((template) => {
+                                                        const active = template.id === selectedTemplateId;
+                                                        return (
+                                                            <button
+                                                                key={template.id}
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    setError(null);
+                                                                    onSelectTemplate?.(template.id);
+                                                                }}
+                                                                className={`w-full text-left rounded-lg border px-3 py-2.5 transition-colors ${
+                                                                    active
+                                                                        ? 'bg-blue-50 border-[#2563EB]'
+                                                                        : 'bg-[#FAFAFA] border-[#E4E4E7] hover:border-[#94A3B8]'
+                                                                }`}
+                                                            >
+                                                                <p className="text-sm font-semibold text-[#09090B] truncate">{template.name}</p>
+                                                                <p className="text-xs text-[#71717A] truncate mt-0.5">{template.fieldCount} fields</p>
+                                                            </button>
+                                                        );
+                                                    })
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {requireTemplateSelection && <div className="h-px bg-[#E4E4E7]" />}
+
+                                    <div className="rounded-xl border-2 border-dashed border-[#D4D4D8] bg-white/80 px-6 py-6 text-center">
+                                        <div className="w-12 h-16 bg-[#5CC66E] rounded-lg relative overflow-hidden mb-5 shadow-sm mx-auto">
+                                            <div className="absolute top-0 right-0 w-4 h-4 bg-white/30 rounded-bl-lg" />
+                                        </div>
+                                        <p className="text-[#09090B] font-bold text-lg mb-1 leading-tight">
+                                            <button
+                                                onClick={() => {
+                                                    if (requireTemplateSelection && !selectedTemplateId) {
+                                                        setError('Please select an extraction template first.');
+                                                        return;
+                                                    }
+                                                    fileInputRef.current?.click();
+                                                }}
+                                                className="text-[#2563EB] hover:text-blue-700 transition-colors underline underline-offset-4 decoration-2"
+                                            >
+                                                Click to upload
+                                            </button>
+                                            <span className="text-[#71717A] ml-2 font-medium">or drag and drop</span>
+                                        </p>
+                                        <p className="text-[#A1A1AA] text-[11px] font-bold uppercase tracking-wider">Max File Size: 20MB</p>
                                     </div>
-                                    <p className="text-[#09090B] font-bold text-lg mb-1 leading-tight">
-                                        <button 
-                                            onClick={() => fileInputRef.current?.click()}
-                                            className="text-[#2563EB] hover:text-blue-700 transition-colors underline underline-offset-4 decoration-2"
-                                        >
-                                            Click to upload
-                                        </button>
-                                        <span className="text-[#71717A] ml-2 font-medium">or drag and drop</span>
-                                    </p>
-                                    <p className="text-[#A1A1AA] text-[11px] font-bold uppercase tracking-wider">Max File Size: 20MB</p>
-                                    
+
                                     {error && (
-                                        <div className="mt-4 flex items-center gap-1.5 text-red-500 font-bold bg-red-50 py-2 px-4 rounded-lg text-xs animate-in slide-in-from-top-1 duration-300">
+                                        <div className="flex items-center justify-center gap-1.5 text-red-500 font-bold bg-red-50 py-2 px-4 rounded-lg text-xs animate-in slide-in-from-top-1 duration-300 border border-red-200">
                                             <AlertCircle size={14} />
                                             {error}
                                         </div>
@@ -224,6 +300,7 @@ export default function ScanModal({ isOpen, onClose, initialState }: ScanModalPr
                             <button 
                                 onClick={() => {
                                     if (state === 'COMPLETE') {
+                                        onScanComplete?.({ fileName, templateId: selectedTemplateId });
                                         router.push('/documents');
                                         onClose();
                                     } else if (state === 'READY') {

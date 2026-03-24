@@ -1,9 +1,8 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Users, Monitor, FileCheck, CreditCard, Calendar, Scan } from 'lucide-react';
+import { Users, CreditCard, Calendar } from 'lucide-react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import ScanModal from '@/components/ScanModal';
 import {
     PieChart, Pie, Cell,
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -13,7 +12,32 @@ import {
 /* ── Configuration & Mock Data ──────────────────────────── */
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-const dashboardDataByMonth: Record<string, any> = {
+interface StatItem {
+    label: string;
+    value: string;
+    change: string;
+    icon: React.ComponentType<{ className?: string; size?: number }>;
+}
+
+interface RequestTypeItem {
+    name: string;
+    value: number;
+    color: string;
+}
+
+interface UsageTrendItem {
+    name: string;
+    visits: number;
+    gain: number;
+}
+
+interface DashboardMonthData {
+    stats: StatItem[];
+    requestTypes: RequestTypeItem[];
+    usageTrend: UsageTrendItem[];
+}
+
+const dashboardDataByMonth: Record<string, DashboardMonthData> = {
     'Jan': {
         stats: [
             { label: 'Documents left', value: '235', change: '+12% from last month', icon: Users },
@@ -93,7 +117,7 @@ function StatCard({ label, value, change, icon: Icon }: {
 }
 
 /* ── Pie Legend Component ───────────────────────────────── */
-function PieLegend({ data }: { data: any[] }) {
+function PieLegend({ data }: { data: RequestTypeItem[] }) {
     return (
         <div className="grid grid-cols-2 gap-x-8 gap-y-3 mt-8 max-w-[300px] mx-auto text-left">
             {data.map((item, idx) => (
@@ -113,7 +137,6 @@ function PieLegend({ data }: { data: any[] }) {
 /* ── Dashboard Page ─────────────────────────────────────── */
 export default function HomePage() {
     const [selectedMonth, setSelectedMonth] = useState('Mar');
-    const [isScanModalOpen, setIsScanModalOpen] = useState(false);
 
     const data = useMemo(() => {
         return dashboardDataByMonth[selectedMonth] || dashboardDataByMonth['default'];
@@ -121,17 +144,10 @@ export default function HomePage() {
 
     return (
         <div className="px-8 py-8 space-y-8 bg-white min-h-screen font-inter">
-            {/* Header with Month Selector and Scan Button */}
+            {/* Header with Month Selector */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
                     <h2 className="text-4xl font-bold text-[#09090B]">Statistics</h2>
-                    <button 
-                        onClick={() => setIsScanModalOpen(true)}
-                        className="flex items-center gap-2 bg-[#2563EB] hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-bold shadow-md transition-all active:scale-95 ml-4"
-                    >
-                        <Scan size={18} />
-                        Scan
-                    </button>
                 </div>
                 
                 <div className="flex items-center gap-2 bg-[#F4F4F5] px-3 py-2 rounded-lg border border-[#E4E4E7] min-w-[180px]">
@@ -150,7 +166,7 @@ export default function HomePage() {
 
             {/* ── Stat Cards ── */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {data.stats.map((s: any) => (
+                {data.stats.map((s) => (
                     <StatCard key={s.label} {...s} />
                 ))}
             </div>
@@ -182,7 +198,7 @@ export default function HomePage() {
                                 startAngle={90}
                                 endAngle={450}
                             >
-                                {data.requestTypes.map((entry: any, index: number) => (
+                                {data.requestTypes.map((entry, index: number) => (
                                     <Cell key={`cell-${index}`} fill={entry.color} />
                                 ))}
                             </Pie>
@@ -262,11 +278,6 @@ export default function HomePage() {
                 </div>
             </div>
 
-            {/* Scan Modal */}
-            <ScanModal 
-                isOpen={isScanModalOpen} 
-                onClose={() => setIsScanModalOpen(false)} 
-            />
         </div>
     );
 }

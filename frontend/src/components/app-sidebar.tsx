@@ -12,7 +12,7 @@ import {
     useSidebar,
 } from "@/components/ui/sidebar"
 import { Logo } from "@/components/ui/logo"
-import { Home, History, FileText, BarChart2, User, Settings, LogOut, ChevronLeft, ChevronRight, FilePen, Users, ChartColumn } from "lucide-react"
+import { Home, History, FileText, BarChart2, User, Settings, LogOut, ChevronLeft, ChevronRight, FilePen } from "lucide-react"
 import { usePathname } from "next/navigation"
 import Image from "next/image";
 
@@ -20,6 +20,7 @@ import Image from "next/image";
 // Match image: Dashboard, History, Documents, Analytics, Profile
 const menuItems = [
     { title: "Dashboard", url: "/home", icon: Home },
+    { title: "Fields Extraction", url: "/fields-extraction", icon: FilePen },
     { title: "History", url: "/history", icon: History },
     { title: "Documents", url: "/documents", icon: FileText },
     { title: "Analytics", url: "/analytics", icon: BarChart2 },

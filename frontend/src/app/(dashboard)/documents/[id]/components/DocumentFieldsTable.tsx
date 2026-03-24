@@ -22,7 +22,9 @@ import ActionsMenu from "./ActionsMenu";
 export interface ExtractedField {
     id: number;
     date: string;
+    group: string;
     fieldName: string;
+    value: string;
     attachment: "Image" | "Table" | null;
     page: number;
 }
@@ -79,10 +81,23 @@ export default function DocumentFieldsTable({
             ),
         },
         {
-            id: "fieldInfo",
+            accessorKey: "group",
             header: ({ column }) => (
+                <button className="flex items-center gap-1 font-medium cursor-pointer" onClick={() => column.toggleSorting()}>
+                    Group <span className="text-grey-3 text-xs">⇅</span>
+                </button>
+            ),
+            cell: ({ row }) => (
+                <span className="text-xs font-semibold text-[#334155] uppercase tracking-wide">
+                    {row.original.group}
+                </span>
+            ),
+        },
+        {
+            id: "fieldInfo",
+            header: () => (
                 <span className="flex items-center gap-1 font-medium">
-                    … <span className="text-grey-3 text-xs">⇅</span>
+                    Field
                 </span>
             ),
             cell: ({ row }) => (
@@ -90,6 +105,31 @@ export default function DocumentFieldsTable({
                     {row.original.fieldName}
                 </span>
             ),
+        },
+        {
+            id: "value",
+            header: () => <span className="font-medium">Value</span>,
+            cell: ({ row }) => {
+                const isPreview = row.original.attachment === "Image" || row.original.attachment === "Table";
+                if (isPreview) {
+                    return (
+                        <a
+                            href={row.original.value}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#2563EB] hover:text-blue-700 underline font-medium"
+                        >
+                            Preview link
+                        </a>
+                    );
+                }
+
+                return (
+                    <span className="text-[#334155]">
+                        {row.original.value}
+                    </span>
+                );
+            },
         },
         {
             accessorKey: "attachment",

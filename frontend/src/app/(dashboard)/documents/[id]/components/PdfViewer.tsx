@@ -93,8 +93,8 @@ export default function PdfViewer({
                                             width: `${box.width}%`,
                                             height: `${box.height}%`,
                                             border: isHighlighted 
-                                                ? `3px solid ${box.color}` 
-                                                : `2px solid ${box.color}99`,
+                                                ? `3.5px solid ${box.color}` 
+                                                : `2.5px solid ${box.color}99`,
                                             backgroundColor: isHighlighted
                                                 ? `${box.color}15`
                                                 : "transparent",

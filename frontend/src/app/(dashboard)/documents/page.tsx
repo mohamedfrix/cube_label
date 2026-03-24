@@ -5,10 +5,10 @@ import { useRouter } from 'next/navigation';
 import StatCard from './components/StatCard';
 import Calendar from './components/Calendar';
 import HistoryTimeline, { TimelineEvent } from './components/HistoryTimeline';
-import Image from 'next/image';
 import { Document } from './components/columns';
 import { DataTable } from './components/data-table';
 import { columns } from './components/columns';
+import { documentsStore } from '@/db/inMemoryDb';
 
 const EVENTS_DB: Record<string, TimelineEvent[]> = {
     "2026-03-24": [
@@ -56,99 +56,6 @@ const EVENTS_DB: Record<string, TimelineEvent[]> = {
     ]
 };
 
-const DOCUMENTS_DB: Document[] = [
-    {
-        id: 1,
-        familyName: "OUAZZI",
-        firstName: "Mounir",
-        phone: "+212 6 12 34 56 78",
-        date: "2026-03-24",
-        tags: ["Urgent", "Review"],
-        doc: "Constat amiable d’accient"
-    },
-    {
-        id: 2,
-        familyName: "OUAZZI",
-        firstName: "Mounir",
-        phone: "+212 6 12 34 56 78",
-        date: "2026-03-24",
-        tags: ["Urgent", "Review"],
-        doc: "Constat amiable d’accient"
-    },
-    {
-        id: 3,
-        familyName: "OUAZZI",
-        firstName: "Mounir",
-        phone: "+212 6 12 34 56 78",
-        date: "2026-03-24",
-        tags: ["Urgent", "Review"],
-        doc: "Constat amiable d’accient"
-    },
-    {
-        id: 4,
-        familyName: "OUAZZI",
-        firstName: "Mounir",
-        phone: "+212 6 12 34 56 78",
-        date: "2026-03-24",
-        tags: ["Urgent", "Review"],
-        doc: "Constat amiable d’accient"
-    },
-    {
-        id: 5,
-        familyName: "OUAZZI",
-        firstName: "Mounir",
-        phone: "+212 6 12 34 56 78",
-        date: "2026-03-24",
-        tags: ["Urgent", "Review"],
-        doc: "Constat amiable d’accient"
-    },
-    {
-        id: 6,  
-        familyName: "OUAZZI",
-        firstName: "Mounir",
-        phone: "+212 6 12 34 56 78",
-        date: "2026-03-24",
-        tags: ["Urgent", "Review"],
-        doc: "Constat amiable d’accient"
-    },
-    {
-        id: 7,
-        familyName: "OUAZZI",
-        firstName: "Mounir",
-        phone: "+212 6 12 34 56 78",
-        date: "2026-03-24",
-        tags: ["Urgent", "Review"],
-        doc: "Constat amiable d’accient"
-    },
-    {
-        id: 8,
-        familyName: "OUAZZI",
-        firstName: "Mounir",
-        phone: "+212 6 12 34 56 78",
-        date: "2026-03-24",
-        tags: ["Urgent", "Review"],
-        doc: "Constat amiable d’accient"
-    },
-    {
-        id: 9,
-        familyName: "OUAZZI",
-        firstName: "Mounir",
-        phone: "+212 6 12 34 56 78",
-        date: "2026-03-24",
-        tags: ["Urgent", "Review"],
-        doc: "Constat amiable d’accient"
-    },
-    {
-        id: 10,
-        familyName: "OUAZZI",
-        firstName: "Mounir",
-        phone: "+212 6 12 34 56 78",
-        date: "2026-03-24",
-        tags: ["Urgent", "Review"],
-        doc: "Constat amiable d’accient"
-    },
-]
-
 const formatDateKey = (date: Date) => {
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 };
@@ -156,6 +63,7 @@ const formatDateKey = (date: Date) => {
 export default function DocumentsPage() {
     const router = useRouter();
     const [selectedDate, setSelectedDate] = useState<Date>(new Date(2026, 2, 24)); // March 24, 2026
+    const documentsDb: Document[] = documentsStore;
 
     const dateKey = formatDateKey(selectedDate);
     const dateEvents = EVENTS_DB[dateKey] || [];
@@ -172,7 +80,7 @@ export default function DocumentsPage() {
                 <div className="w-full mt-12 font-inter font-medium">
                     <DataTable 
                         columns={columns} 
-                        data={DOCUMENTS_DB} 
+                        data={documentsDb} 
                         onRowClick={(row) => router.push(`/documents/${row.id}`)}
                     />
                 </div>
