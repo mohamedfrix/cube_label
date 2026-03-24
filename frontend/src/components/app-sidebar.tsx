@@ -17,12 +17,12 @@ import { usePathname } from "next/navigation"
 import Image from "next/image";
 
 
-// Extracted from Figma: Dashboard, History, Documents, Analytics, Profile
+// Match image: Dashboard, History, Documents, Analytics, Profile
 const menuItems = [
-    { title: "Home", url: "/home", icon: Home },
-    { title: "Documents", url: "/documents", icon: FilePen },
-    { title: "User Management", url: "/user-management", icon: Users },
-    { title: "Statistics", url: "/statistics", icon: ChartColumn },
+    { title: "Dashboard", url: "/home", icon: Home },
+    { title: "History", url: "/history", icon: History },
+    { title: "Documents", url: "/documents", icon: FileText },
+    { title: "Analytics", url: "/analytics", icon: BarChart2 },
     { title: "Profile", url: "/profile", icon: User },
 ]
 
@@ -70,14 +70,18 @@ export function AppSidebar() {
 
             {/* ── Main navigation ── */}
             <SidebarContent>
-                <SidebarGroup >
-                    <div className="w-full border border-border rounded-md py-2 px-3 flex items-center gap-x-3">
-                        <div className="relative w-6 h-6 rounded-full">
-                            <Image src="/images/profile_picture.jpg" alt="" fill className="object-cover rounded-full" />
-                        </div>
-                        <p className="font-inter text-sm text-black font-medium">Mr. OUAZZI Mounir</p>
-                    </div>
-                </SidebarGroup>
+                {
+                    expanded && (
+                        <SidebarGroup >
+                            <div className="w-full border border-border rounded-md py-2 px-3 flex items-center gap-x-3">
+                                <div className="relative w-6 h-6 rounded-full">
+                                    <Image src="/images/profile_picture.jpg" alt="" fill className="object-cover rounded-full" />
+                                </div>
+                                <p className="font-inter text-sm text-black font-medium">Mr. OUAZZI Mounir</p>
+                            </div>
+                        </SidebarGroup>
+                    )
+                }
                 <SidebarGroup className="mt-4">
                     <SidebarMenu>
                         {menuItems.map((item) => (

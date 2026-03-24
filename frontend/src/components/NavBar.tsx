@@ -1,6 +1,6 @@
 "use client";
 
-import { User, Bell, FileText, Home, Users, BarChart } from "lucide-react";
+import { User, Bell, FileText, Home, Users, BarChart2, LayoutDashboard, History as LucideHistory } from "lucide-react";
 import SearchBar from "./SearchBar";
 import { Button } from "./ui/button";
 import { usePathname } from "next/navigation";
@@ -15,14 +15,14 @@ export default function NavBar() {
         Icon = FileText;
         title = "Documents";
     } else if (pathname.includes("/home")) {
-        Icon = Home;
-        title = "Home";
-    } else if (pathname.includes("/users")) {
-        Icon = Users;
-        title = "User Management";
-    } else if (pathname.includes("/statistics")) {
-        Icon = BarChart;
-        title = "Statistics";
+        Icon = LayoutDashboard;
+        title = "Dashboard";
+    } else if (pathname.includes("/history")) {
+        Icon = LucideHistory;
+        title = "History";
+    } else if (pathname.includes("/analytics")) {
+        Icon = BarChart2;
+        title = "Analytics";
     }
 
     return (

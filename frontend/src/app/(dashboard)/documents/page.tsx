@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import StatCard from './components/StatCard';
 import Calendar from './components/Calendar';
 import HistoryTimeline, { TimelineEvent } from './components/HistoryTimeline';
@@ -153,6 +154,7 @@ const formatDateKey = (date: Date) => {
 };
 
 export default function DocumentsPage() {
+    const router = useRouter();
     const [selectedDate, setSelectedDate] = useState<Date>(new Date(2026, 2, 24)); // March 24, 2026
 
     const dateKey = formatDateKey(selectedDate);
@@ -168,7 +170,11 @@ export default function DocumentsPage() {
                     <StatCard title="Finalized documents" value="1190079" />
                 </div>
                 <div className="w-full mt-12 font-inter font-medium">
-                    <DataTable columns={columns} data={DOCUMENTS_DB} />
+                    <DataTable 
+                        columns={columns} 
+                        data={DOCUMENTS_DB} 
+                        onRowClick={(row) => router.push(`/documents/${row.id}`)}
+                    />
                 </div>
             </div>
             
